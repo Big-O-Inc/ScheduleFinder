@@ -4,5 +4,6 @@ from . import views
 
 urlpatterns = [
     path("index", views.index),
-    path("map", views.get_map)
+    path("map", views.get_map),
+    path("settings", views.get_settings)
 ]

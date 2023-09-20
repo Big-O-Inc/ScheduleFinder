@@ -9,3 +9,8 @@ def index(request):
 def get_map(request):
     if request.method == 'GET':
         return render(request, 'map.html')
+    
+#Joshua: An http get method that will retrieve the settings menu
+def get_settings(request):
+    if request.method == "GET":
+        return render(request, 'settings.html')
