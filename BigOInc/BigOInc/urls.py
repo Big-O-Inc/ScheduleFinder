@@ -18,6 +18,6 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path("BigO/", include("BigO.urls")),
+    path("FinderKeeper/", include("FinderKeeper.urls")),
     path('admin/', admin.site.urls),
 ]
