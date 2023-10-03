@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
 import pandas as pd
+from geopy.geocoders import Nominatim
 
 def index(request):
     return render(request, 'index.html')
@@ -30,3 +31,25 @@ def building_cord(request):
     df = pd.DataFrame(data)
     #Displays a very basic table of the data (in the final product this table will be unnecessary)
     return HttpResponse(df.to_html())
+
+#Joshua Bicera (for A4): Using geopy to return the user's current location (WIP)
+@api_view(['GET'])
+def get_user_location(request):
+    #Simulate the user's location (replace with actual geolocation logic)
+    #Will need to have a map layout to return specific cordinates
+    user_address = "3801 W Temple Ave, Pomona, CA 91768" #Simulated user address
+
+    geolocator = Nominatim(user_agent="my_geocoder") #Initialize the geocoder
+    user_coordinates = {}
+
+    #Geocode the user's address to get coordinates
+    location = geolocator.geocode(user_address)
+    if location:
+        user_coordinates['User'] = {
+            'Latitude': location.latitude,
+            'Longitude': location.longitude,
+        }
+
+    return user_coordinates
+
+    
