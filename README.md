@@ -11,3 +11,8 @@ All dependencies found in the requirements.txt file. To install dependencies run
 ```
 pip install -r requirements.txt
 ```
+
+Run this command to run tests:
+```
+./manage.py test
+```
