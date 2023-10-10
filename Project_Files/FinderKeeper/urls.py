@@ -5,5 +5,7 @@ from . import views
 urlpatterns = [
     path("", views.index),
     path("map", views.get_map),
-    path("buildings", views.building_cord)
+    path("buildings", views.building_cord),
+    path("schedule", views.load_sched),
 ]
+
