@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from rest_framework.decorators import api_view
 import pandas as pd
 from geopy.geocoders import Nominatim
+from .models import *
 
 def index(request):
     return render(request, 'index.html')
@@ -52,4 +53,10 @@ def get_user_location(request):
 
     return user_coordinates
 
-    
+def load_sched(request):
+    #Pulls the specific events that belongs to this user
+    #user_sched = Event.objects.filter(uid=userID).values() #Need to figure out how to get the userID
+    #For now just pull every data 
+    schedule = Event.objects.all().values()
+    context = {'schedData':schedule,}
+    return render(request, 'FinderKeeper/schedule.html', context)

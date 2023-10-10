@@ -6,5 +6,6 @@ urlpatterns = [
     path("", views.index),
     path("map", views.get_map),
     path("settings", views.get_settings),
-    path("buildings", views.building_cord)
+    path("buildings", views.building_cord),
+    path("schedule", views.load_sched)
 ]
