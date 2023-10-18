@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
 from rest_framework.decorators import api_view
 import pandas as pd
 from geopy.geocoders import Nominatim
@@ -53,10 +54,24 @@ def get_user_location(request):
 
     return user_coordinates
 
+@api_view(['GET'])
 def load_sched(request):
     #Pulls the specific events that belongs to this user
     #user_sched = Event.objects.filter(uid=userID).values() #Need to figure out how to get the userID
     #For now just pull every data 
     schedule = Event.objects.all().values()
-    context = {'schedData':schedule,}
-    return render(request, 'FinderKeeper/schedule.html', context)
+    return render(request
+                  , 'FinderKeeper/schedule.html' #HTML to create calendar
+                  , {
+                      'schedData':schedule, #Data to populate the calendar
+                    },)
+
+@api_view(['POST'])
+def add_event(request, user_id):
+    try:
+        Event.objects.create(uid=user_id, title=request.POST["title"], startDate=request.POST["startDate"]
+                            , endDate=request.POST["endDate"], location=request.POST["location"]
+                            , description=request.POST["description"])
+    except(...):
+        #Need to figure what could cause errors and how to handle each of them, do nothing for now
+        pass
