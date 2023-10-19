@@ -7,12 +7,12 @@ from geopy.geocoders import Nominatim
 from .models import *
 
 def index(request):
-    return render(request, 'index.html')
+    return render(request, 'FinderKeeper/index.html')
 
 #Benjamin (for A3): An http get method that will respond with a map image from the map.html file
 @api_view(['GET'])
 def get_map(request):
-    return render(request, 'map.html')
+    return render(request, 'FinderKeeper/map.html')
     
 #Joshua: An http get method that will retrieve the settings menu
 def get_settings(request):
@@ -60,12 +60,12 @@ def load_sched(request):
     #user_sched = Event.objects.filter(uid=userID).values() #Need to figure out how to get the userID
     #For now just pull every data 
     schedule = Event.objects.all().values()
-    return render(request
-                  , 'FinderKeeper/schedule.html' #HTML to create calendar
-                  , {
-                      'schedData':schedule, #Data to populate the calendar
-                    },)
+    context = {
+        'eventData':schedule,
+    }
+    return render(request, 'FinderKeeper/schedule.html', context,)
 
+#POST route W.I.P.
 @api_view(['POST'])
 def add_event(request, user_id):
     try:
