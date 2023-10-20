@@ -16,3 +16,8 @@ Run this command to run tests:
 ```
 ./manage.py test
 ```
+
+Run this command to run the webpage:
+```
+python manage.py runserver
+```
