@@ -30,4 +30,5 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            cd ScheduleFinder
             git pull origin 
