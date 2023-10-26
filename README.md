@@ -19,5 +19,5 @@ Run this command to run tests:
 
 Run this command to run the webpage:
 ```
-python manage.py runserver
+python manage.py runserver 0.0.0.0:8000
 ```
