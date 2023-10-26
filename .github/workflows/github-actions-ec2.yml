@@ -31,4 +31,4 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd ScheduleFinder
-            sudo rsync -tr ScheduleFinder/* ScheduleFinder
+            sudo rsync -tr ScheduleFinder/* ~
