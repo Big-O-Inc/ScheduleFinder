@@ -30,4 +30,4 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            sudo mv ScheduleFinder/* ~/ScheduleFinder 
+            sudo rsync -tr ScheduleFinder/* ~/ScheduleFinder 
