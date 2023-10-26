@@ -32,3 +32,4 @@ jobs:
           script: |
             cd ScheduleFinder
             git pull origin 
+            git clean -fd
