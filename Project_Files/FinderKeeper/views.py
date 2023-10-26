@@ -1,77 +1,67 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
+from django.views.generic import View
 from rest_framework.decorators import api_view
 import pandas as pd
 from geopy.geocoders import Nominatim
 from .models import *
 
-def index(request):
-    return render(request, 'FinderKeeper/index.html')
+'''
+Loads the home page of the website 
+'''
+class Homepage(View):
+    def get(self, request):
+        return render(request, 'FinderKeeper/index.html')
 
-#Benjamin (for A3): An http get method that will respond with a map image from the map.html file
-@api_view(['GET'])
-def get_map(request):
-    return render(request, 'FinderKeeper/map.html')
+'''
+Asks for username and password and will fetch the uuid from database if user has an account
+'''
+class Login(View):
+    def get(self, request):
+        return render(request, 'FinderKeeper/login.html')
     
-#Joshua: An http get method that will retrieve the settings menu
-def get_settings(request):
-    if request.method == "GET":
-        return render(request, 'settings.html')
-    
-#Benjamin (for A4): Using the pandas library to read and display data from json formatted data. Found at endpoint /buildings
-@api_view(['GET'])
-def building_cord(request):
-    #For now, will have the data of a few buildings stored in a variable. Will move all of this to a database later
-    #Keys are the building numbers, and the value is a dictionary holding the college of the building and the latitude and longitude coordinates.
-    data = {'5': {'Building':'College of Letters, Arts, and Social Sciences', 'Latitude':34.057845973368906, 'Longitude':-117.82442360649715},
-            '7': {'Building':'College of Environmental Design', 'Latitude':34.05773931072947, 'Longitude':-117.8274276805938},
-            '8': {'Building':'College of Science', 'Latitude':34.05891259222622, 'Longitude':-117.82488494644772}, 
-            '9': {'Building':'College of Engineering', 'Latitude':34.05925924046298, 'Longitude':-117.82234221230162},
-            '17':{'Building':'College of Engineering', 'Latitude':34.06006808083938, 'Longitude':-117.82120495567929},
-            '163':{'Building':'College of Business Administration','Latitude':34.06137465285341, 'Longitude':-117.82046466599118}}
-    df = pd.DataFrame(data)
-    #Displays a very basic table of the data (in the final product this table will be unnecessary)
-    return HttpResponse(df.to_html())
+'''
+Creating account info for user (username and password), secure their info, and associate their account to a uuid
+'''
+class Signup(View):
+    def get(self, request):
+        return render(request, 'FinderKeeper/signup.html')
 
-#Joshua Bicera (for A4): Using geopy to return the user's current location (WIP)
-@api_view(['GET'])
-def get_user_location(request):
-    #Simulate the user's location (replace with actual geolocation logic)
-    #Will need to have a map layout to return specific cordinates
-    user_address = "3801 W Temple Ave, Pomona, CA 91768" #Simulated user address
-
-    geolocator = Nominatim(user_agent="my_geocoder") #Initialize the geocoder
-    user_coordinates = {}
-
-    #Geocode the user's address to get coordinates
-    location = geolocator.geocode(user_address)
-    if location:
-        user_coordinates['User'] = {
-            'Latitude': location.latitude,
-            'Longitude': location.longitude,
+'''
+Creates and populates a schedule with events of the user (searched by uuid). 
+Can add, update, and delete events associated with uid.
+'''
+class Scheduler(View):
+    def get(self, request, userId='None'): #Creates the scheduler and populates it with events from the user
+        if (userId == 'None'):
+            return render(request, 'FinderKeeper/schedule.html')
+        
+        user_sched = Event.objects.filter(uid=userId).values() #Need to figure out how to get the userID
+        context = {
+            'eventData':user_sched,
         }
+        return render(request, 'FinderKeeper/schedule.html', context,)
 
-    return user_coordinates
-
-@api_view(['GET'])
-def load_sched(request):
-    #Pulls the specific events that belongs to this user
-    #user_sched = Event.objects.filter(uid=userID).values() #Need to figure out how to get the userID
-    #For now just pull every data 
-    schedule = Event.objects.all().values()
-    context = {
-        'eventData':schedule,
-    }
-    return render(request, 'FinderKeeper/schedule.html', context,)
-
-#POST route W.I.P.
-@api_view(['POST'])
-def add_event(request, user_id):
-    try:
-        Event.objects.create(uid=user_id, title=request.POST["title"], startDate=request.POST["startDate"]
+    def put(self, request, userId): #Adding classes/event
+        try:
+            Event.objects.create(uid=userId, title=request.POST["title"], startDate=request.POST["startDate"]
                             , endDate=request.POST["endDate"], location=request.POST["location"]
                             , description=request.POST["description"])
-    except(...):
-        #Need to figure what could cause errors and how to handle each of them, do nothing for now
+        except(...):
+            #Need to figure what could cause errors and how to handle each of them, do nothing for now
+            pass
+
+    def post(self, request): #Update classes/event
         pass
+
+    def delete(self, request): #Delete classes/event
+        pass
+
+'''
+Produces a map of the campus, allows users to pin/highlight buildings for easier navigation
+Interacts with the Scheduler class to autmoatically pin the buildings of the user's classes 
+'''
+class CampusMap(View):
+    def get(self, request):
+        return render(request, 'FinderKeeper/map.html')
