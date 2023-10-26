@@ -30,4 +30,4 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            sudo rsync -tr ScheduleFinder/* ~/ScheduleFinder
+            sudo rsync --delete-before -tr ScheduleFinder/* ~/ScheduleFinder 
