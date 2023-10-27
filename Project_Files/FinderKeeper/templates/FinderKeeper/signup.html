@@ -95,7 +95,7 @@
 </head>
 <body>
     <div class="navbar">
-        <a href="/FinderKeeper">Home Page</a>
+        <a href="/">Home Page</a>
         <a href = "https://github.com/Big-O-Inc/ScheduleFinder" target="_blank">GitHub</a>
         <a href="#settings">Settings</a>
         <a href="/schedule">Schedule</a>
@@ -103,7 +103,8 @@
     </div>
     <div class="container">
         <div class="logo-container">
-            <img class="logo" src="cppHorseLogo.png" alt="Cpp Logo">
+            {%load static%}
+            <img class="logo" src="{% static "images\cppHorseLogo.png" %}" alt="Cpp Logo">
         </div>
         <div class="signup-container">
             <h1>Sign Up</h1>
