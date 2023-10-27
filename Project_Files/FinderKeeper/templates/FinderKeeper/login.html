@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
-    {%load static%}
-    <img src="{% static "images\bronco_logo.jpg" %}"
+
     <style>
         body {
             font-family: Helvetica, sans-serif;
@@ -17,7 +16,6 @@
             overflow-y:auto;
             margin: 0;
         }
-
         .header {
 
             background-repeat: no-repeat;
@@ -95,6 +93,7 @@
     </style>
 </head>
 <body>
+    
     <div class="navbar">
         <a href="">Home Page</a>
         <a href = "https://github.com/Big-O-Inc/ScheduleFinder" target="_blank">GitHub</a>
@@ -104,7 +103,8 @@
     </div>
     <div class="container">
         <div class="logo-container">
-            <img class="logo" src="cppHorseLogo.png" alt="Cpp Logo">
+            {%load static%}
+            <img class="logo" src="{% static "images\cppHorseLogo.png" %}" alt="Cpp Logo">
         </div>
     <div class="login-container">
         <h1>Login</h1>
