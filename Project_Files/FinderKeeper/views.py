@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
+from django.contrib.auth import authenticate, login
 from django.views.generic import View
 from rest_framework.decorators import api_view
 import pandas as pd
@@ -20,14 +21,39 @@ Asks for username and password and will fetch the uuid from database if user has
 class Login(View):
     def get(self, request):
         return render(request, 'FinderKeeper/login.html')
-    
+    def post(self, request):
+        username = request.POST['username']
+        password = request.POST['password']
+        
+        # Authenticate user
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            login(request, user)  # Log the user in
+            # Redirect to a different page upon successful login
+            
+            #INSERT WHEREVER USER HAS SCHEDULE
+            return redirect('dashboard')  # Redirect to the dashboard, change as needed
+        else:
+            # Invalid login
+            return HttpResponse("Invalid login credentials. Please try again.")
 '''
 Creating account info for user (username and password), secure their info, and associate their account to a uuid
 '''
 class Signup(View):
     def get(self, request):
         return render(request, 'FinderKeeper/signup.html')
-
+    def post(self, request):
+        # Assuming the form fields are 'email', 'username', and 'password'
+        email = request.POST.get('email')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        
+        # Create a new user
+        user = User.objects.create_user(username=username, email=email, password=password)
+        
+        # Redirect to the login page after successful sign-up
+        return redirect('FinderKeeper/login.html')
 '''
 Creates and populates a schedule with events of the user (searched by uuid). 
 Can add, update, and delete events associated with uid.
