@@ -108,10 +108,12 @@
         </div>
         <div class="signup-container">
             <h1>Sign Up</h1>
-            <form><input type="email" placeholder="Email" required> <!-- Added input for email -->
-                <input type="text" placeholder="Username" required>
-                <input type="password" placeholder="Password" required>
-                <button type="submit">Sign Up</button> <!-- Changed button text to "Sign Up" -->
+            <form method="post" action="{% url 'signup' %}">
+                {% csrf_token %}
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <button type="submit">Sign Up</button>
             </form>
             <br>
             <a class="create-account-link" href="login">Already have an account? Log In</a>
