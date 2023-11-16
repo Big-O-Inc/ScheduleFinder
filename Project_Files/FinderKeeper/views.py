@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth import authenticate, login
+#from django.contrib.auth.models import User
+from users.models import User 
 from django.views.generic import View
 from rest_framework.decorators import api_view
 import pandas as pd
@@ -13,6 +15,9 @@ Loads the home page of the website
 '''
 class Homepage(View):
     def get(self, request):
+        if request.user.is_authenticated:
+            print(request.user.id)
+            
         return render(request, 'FinderKeeper/index.html')
 
 '''
@@ -24,16 +29,16 @@ class Login(View):
     def post(self, request):
         username = request.POST['username']
         password = request.POST['password']
-        
+
         # Authenticate user
         user = authenticate(request, username=username, password=password)
-        
+
         if user is not None:
             login(request, user)  # Log the user in
             # Redirect to a different page upon successful login
-            
+        
             #INSERT WHEREVER USER HAS SCHEDULE
-            return redirect('dashboard')  # Redirect to the dashboard, change as needed
+            return redirect('schedule')  # Redirect to the dashboard, change as needed
         else:
             # Invalid login
             return HttpResponse("Invalid login credentials. Please try again.")
@@ -50,38 +55,46 @@ class Signup(View):
         password = request.POST.get('password')
         
         # Create a new user
-        user = User.objects.create_user(username=username, email=email, password=password)
+        user = User.objects.create_user(username=username, email=email)
+        user.set_password(password)
+        user.save()
         
         # Redirect to the login page after successful sign-up
-        return redirect('FinderKeeper/login.html')
+        return redirect('FinderKeeper/login')
 '''
 Creates and populates a schedule with events of the user (searched by uuid). 
 Can add, update, and delete events associated with uid.
 '''
 class Scheduler(View):
-    def get(self, request, userId='None'): #Creates the scheduler and populates it with events from the user
-        if (userId == 'None'):
+    #Creates the scheduler and populates it with events from the user
+    def get(self, request):
+        if request.user.is_authenticated:
+            user_sched = Event.objects.filter(uid=request.user).values() 
+            context = {
+                'eventData':user_sched,
+            }
+            return render(request, 'FinderKeeper/schedule.html', context,)
+        
+        else:  #If user is not logged in, just direct them to an empty schedule 
+            print("Not logged in")
             return render(request, 'FinderKeeper/schedule.html')
         
-        user_sched = Event.objects.filter(uid=userId).values() #Need to figure out how to get the userID
-        context = {
-            'eventData':user_sched,
-        }
-        return render(request, 'FinderKeeper/schedule.html', context,)
-
-    def put(self, request, userId): #Adding classes/event
+    #Adding classes/event
+    def put(self, request):
         try:
-            Event.objects.create(uid=userId, title=request.POST["title"], startDate=request.POST["startDate"]
+            Event.objects.create(uid=request.user.id, title=request.POST["title"], startDate=request.POST["startDate"]
                             , endDate=request.POST["endDate"], location=request.POST["location"]
                             , description=request.POST["description"])
         except(...):
             #Need to figure what could cause errors and how to handle each of them, do nothing for now
             pass
 
-    def post(self, request): #Update classes/event
+    #Update classes/event
+    def post(self, request):
         pass
 
-    def delete(self, request): #Delete classes/event
+    #Delete classes/event
+    def delete(self, request):
         pass
 
 '''

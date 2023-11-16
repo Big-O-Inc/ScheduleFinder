@@ -25,20 +25,21 @@ SECRET_KEY = 'django-insecure-ghc2o_!7dt#jb6(7whj27t6l46c2dx5o0jw!+baw4w$+8v#d_*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['13.58.197.182','.cppfinder.com']
+ALLOWED_HOSTS = ['13.58.197.182','.cppfinder.com', 'localhost']
 
 
 # Application definition
 
 INSTALLED_APPS = [
     'FinderKeeper.apps.FinderkeeperConfig',
-    'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.admin',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework'
+    'rest_framework',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -125,3 +126,11 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#The logged in user model for table references s
+AUTH_USER_MODEL = 'users.User'
+
+#Authentication backends
+AUTHENTICATION_BACKENDS = (
+        'django.contrib.auth.backends.ModelBackend',
+)
