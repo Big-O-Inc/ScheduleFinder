@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 #from django.contrib.auth.models import User
 from users.models import User 
 from django.views.generic import View
@@ -104,3 +104,16 @@ Interacts with the Scheduler class to autmoatically pin the buildings of the use
 class CampusMap(View):
     def get(self, request):
         return render(request, 'FinderKeeper/map.html')
+
+'''
+Has settings for web application that gives the user option to
+- Log out of their account
+-
+'''
+class Settings(View):
+    def get(self, request):
+        return render(request, 'FinderKeeper/settings.html')
+   
+def custom_logout(request):
+    logout(request)
+    return redirect('index')
