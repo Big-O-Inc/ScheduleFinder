@@ -4,3 +4,4 @@ geopy==2.4.0
 numpy==1.26.0
 pandas==2.1.1
 gunicorn==21.2.*
+django-multiselectfield==0.1.12

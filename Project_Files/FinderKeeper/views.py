@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth import authenticate, login, logout
 #from django.contrib.auth.models import User
+from .forms import *
 from users.models import User 
 from django.views.generic import View
 from rest_framework.decorators import api_view
@@ -42,6 +43,16 @@ class Login(View):
         else:
             # Invalid login
             return HttpResponse("Invalid login credentials. Please try again.")
+        
+class Logout(View):
+    def get(self, request):
+        pass 
+    
+    def post(self, request):
+        if request.user.is_authenticated:
+            logout(request)
+            return redirect('homepage')
+
 '''
 Creating account info for user (username and password), secure their info, and associate their account to a uuid
 '''
@@ -68,29 +79,50 @@ Can add, update, and delete events associated with uid.
 class Scheduler(View):
     #Creates the scheduler and populates it with events from the user
     def get(self, request):
+        form = AddEventForm()
         if request.user.is_authenticated:
             user_sched = Event.objects.filter(uid=request.user).values() 
+            
+            for x in user_sched:
+                print(x['id'])
+
             context = {
                 'eventData':user_sched,
+                'form':form,
             }
             return render(request, 'FinderKeeper/schedule.html', context,)
-        
         else:  #If user is not logged in, just direct them to an empty schedule 
             print("Not logged in")
-            return render(request, 'FinderKeeper/schedule.html')
+            return render(request, 'FinderKeeper/schedule.html',{'form':form})
         
+    #Handles changes to users schedule
+    def post(self, request):
+        if request.user.is_authenticated:
+            method = self.request.POST.get('_method', '').lower()
+            if method == 'add':
+                self.add(request)
+            elif method == 'update':
+                self.update(request) 
+            elif method == 'delete':
+                self.delete(request)
+        else:
+            return HttpResponse("Must login first")
+        return redirect('schedule')
+
     #Adding classes/event
-    def put(self, request):
-        try:
-            Event.objects.create(uid=request.user.id, title=request.POST["title"], startDate=request.POST["startDate"]
-                            , endDate=request.POST["endDate"], location=request.POST["location"]
-                            , description=request.POST["description"])
-        except(...):
-            #Need to figure what could cause errors and how to handle each of them, do nothing for now
-            pass
+    def add(self, request):
+        form = AddEventForm(request.POST)
+        if form.is_valid(): 
+            Event.objects.create(uid=request.user,
+                                 title=form.cleaned_data.get("title"),
+                                 day=form.cleaned_data.get("days"),
+                                 startTime=form.cleaned_data.get("startTime"),
+                                 endTime=form.cleaned_data.get("endTime"),
+                                 location=form.cleaned_data.get("location"),
+                                 description=form.cleaned_data.get("description")) 
 
     #Update classes/event
-    def post(self, request):
+    def update(self, request):
         pass
 
     #Delete classes/event
@@ -113,7 +145,3 @@ Has settings for web application that gives the user option to
 class Settings(View):
     def get(self, request):
         return render(request, 'FinderKeeper/settings.html')
-   
-def custom_logout(request):
-    logout(request)
-    return redirect('index')

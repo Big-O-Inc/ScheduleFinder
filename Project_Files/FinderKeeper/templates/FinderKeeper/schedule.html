@@ -2,36 +2,11 @@
 <html lang="en">
 {% load static %}
 
-<style>
-    body{
-        font-family: Helvetica, sans-serif;
-    }
-    .navbar {
-            background-color: #333;
-            overflow: hidden;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-        }
-    .navbar a {
-        float: left;
-        display: block;
-        color: #fff;
-        text-align: center;
-        padding: 14px 16px;
-        text-decoration: none;
-    }
-    .navbar a:hover {
-        background-color: #555;
-    }
-</style>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script>document.getElementsByTagName("html")[0].className += " js";</script>
-  
-    <link rel="stylesheet" href="{% static 'FinderKeeper/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'FinderKeeper/css/schedStyle.css' %}">
     <title>Finder Keeper</title>
 </head>
 
@@ -39,8 +14,7 @@
     <div class="navbar">
         <a href="/">Home Page</a>
         <a href = "https://github.com/Big-O-Inc/ScheduleFinder" target="_blank">GitHub</a>
-        <a href="#settings">Settings</a>
-        <a href="./schedule">Schedule</a>
+        <a href="settings">Settings</a>
         <a href="./login">Login</a>
         <a href="./signup">Sign Up</a>
     </div>
@@ -48,6 +22,41 @@
     <header class="cd-main-header text-center flex flex-column flex-center">
         <h1 class="text-xl">Schedule</h1>
     </header>
+
+    <div>
+        <button id="addBtn">Add</button>
+        <button id="editBtn">Edit</button>
+        <button id="delBtn">Delete</button>
+    </div>
+    
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <span class="closeAdd">&times;</span>
+            <form method="post">
+                {% csrf_token %}
+                {{ form }}
+                <input type="hidden" name="_method" value="add">
+                <button type="submit">Submit</button>
+                <button id="cancelAddBtn">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="closeEdit">&times;</span>
+            <a>Edit Class</a>
+            <button id="cancelEditBtn">Cancel</button>
+        </div>
+    </div>
+
+    <div id="delModal" class="modal">
+        <div class="modal-content">
+            <span class="closeDel">&times;</span>
+            <a>Delete Class</a>
+            <button id="cancelDelBtn">Cancel</button>
+        </div>
+    </div>
 
     <div class="cd-schedule cd-schedule--loading margin-top-lg margin-bottom-lg js-cd-schedule">
         <div class="cd-schedule__timeline">
@@ -95,13 +104,15 @@
                     <ul>
                         
                         {% for event in eventData %}
-                        {% if event.day == 1 %}
+                        {% for day in event.day %}
+                        {% if day == '1' %}
                         <li class="cd-schedule__event">
-                            <a data-start={{event.startTime}} data-end={{event.endTime}} data-content={{event.description}} data-event="event-1" href="#0">
+                            <a data-start={{event.startTime|date:"G:i"}} data-end={{event.endTime|date:"G:i"}} data-content={{event.description}} data-event="event-1" href="#0">
                                 <em class="cd-schedule__name">{{ event.title }}</em>
                             </a>
                         </li>
                         {% endif %}
+                        {% endfor %}
                         {% endfor %}
 
                     </ul>
@@ -119,13 +130,15 @@
                         </li>  Example of how event should inserted into a day  -->
 
                         {% for event in eventData %}
-                        {% if event.day == 2 %}
+                        {% for day in event.day %}
+                        {% if day == '2' %}
                         <li class="cd-schedule__event">
-                            <a data-start={{event.startTime}} data-end= {{event.endTime}} data-content="event-abs-circuit" data-event="event-2" href="#0">
+                            <a data-start={{event.startTime|date:"G:i"}} data-end= {{event.endTime|date:"G:i"}} data-content="event-abs-circuit" data-event="event-2" href="#0">
                                 <em class="cd-schedule__name">{{ event.title }}</em>
                             </a>
                         </li>
                         {% endif %}
+                        {% endfor %}
                         {% endfor %}
 
 
@@ -138,13 +151,15 @@
                     <ul>
                        <!--Event data for Wednesday goes here-->
                         {% for event in eventData %}
-                        {% if event.day == 3 %}
+                        {% for day in event.day %}
+                        {% if day == '3' %}
                         <li class="cd-schedule__event">
-                            <a data-start={{event.startTime}} data-end={{event.endTime}} data-content="event-abs-circuit" data-event="event-3" href="#0">
+                            <a data-start={{event.startTime|date:"G:i"}} data-end={{event.endTime|date:"G:i"}} data-content="event-abs-circuit" data-event="event-3" href="#0">
                                 <em class="cd-schedule__name">{{ event.title }}</em>
                             </a>
                         </li>
                         {% endif %}
+                        {% endfor %}
                         {% endfor %}
                     </ul>
 
@@ -156,13 +171,15 @@
                     <ul>
                         <!--Event data for Thursday goes here-->
                         {% for event in eventData %}
-                        {% if event.day == 4 %}
+                        {% for day in event.day %}
+                        {% if day == '4' %}
                         <li class="cd-schedule__event">
-                            <a data-start={{event.startTime}} data-end={{event.endTime}} data-content="event-abs-circuit" data-event="event-4" href="#0">
+                            <a data-start={{event.startTime|date:"G:i"}} data-end={{event.endTime|date:"G:i"}} data-content="event-abs-circuit" data-event="event-4" href="#0">
                                 <em class="cd-schedule__name">{{ event.title }}</em>
                             </a>
                         </li>
                         {% endif %}
+                        {% endfor %}
                         {% endfor %}
                     </ul>
 
@@ -174,13 +191,15 @@
                     <ul>
                         <!--Event data for Friday goes here-->
                         {% for event in eventData %}
-                        {% if event.day == 5 %}
+                        {% for day in event.day %}
+                        {% if day == '5' %}
                         <li class="cd-schedule__event">
-                            <a data-start={{event.startTime}} data-end={{event.endTime}} data-content="event-abs-circuit" data-event="event-5" href="#0">
+                            <a data-start={{event.startTime|date:"G:i"}} data-end={{event.endTime|date:"G:i"}} data-content="event-abs-circuit" data-event="event-1" href="#0">
                                 <em class="cd-schedule__name">{{ event.title }}</em>
                             </a>
                         </li>
                         {% endif %}
+                        {% endfor %}
                         {% endfor %}
                     </ul>
 
@@ -211,6 +230,7 @@
 
     <script src="{% static 'FinderKeeper/js/util.js' %}"></script> <!-- util functions included in the CodyHouse framework -->
     <script src="{% static 'FinderKeeper/js/main.js' %}"></script>
+    <script defer src="{% static 'FinderKeeper/js/schedEdit.js' %}"></script>
 </body>
 <header class="cd-main-header text-center flex flex-column flex-center">
     <p class="margin-top-md margin-bottom-xl"><a class="cd-article-link"
