@@ -61,3 +61,8 @@ body {
 .overflowHidden {
     overflow: hidden;
 }
+
+.scrollBox {
+    height:150px;
+    overflow-x:scroll;
+}

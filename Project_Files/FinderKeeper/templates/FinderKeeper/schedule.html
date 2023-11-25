@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
 {% load static %}
+{{eventJson|json_script:"eventJson"}}
 
 <head>
     <meta charset="UTF-8">
@@ -33,10 +34,11 @@
         <div class="modal-content">
             <span class="closeAdd">&times;</span>
             <form method="post">
+                <p>Add Class</p>
                 {% csrf_token %}
                 {{ form }}
                 <input type="hidden" name="_method" value="add">
-                <button type="submit">Submit</button>
+                <button type="submit">Add</button>
                 <button id="cancelAddBtn">Cancel</button>
             </form>
         </div>
@@ -45,7 +47,42 @@
     <div id="editModal" class="modal">
         <div class="modal-content">
             <span class="closeEdit">&times;</span>
-            <a>Edit Class</a>
+                <p>Edit Class</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <select name="editList" id="editList" onchange="return loadForm()">
+                        {% for event in eventData %}
+                        <option value="{{event.id}}">{{event.title}}</option>
+                        {% endfor %}
+                    </select>
+
+                    <label>Title:</label>
+                    <input type="text" id="editTitle" name ="title" maxlength="200"  value="">
+
+                    <label>Days:</label>
+                    <div>
+                        <label><input type="checkbox" name="dayList" id="monCheck" value=1>M</label>
+                        <label><input type="checkbox" name="dayList" id="tueCheck" value=2>T</label>
+                        <label><input type="checkbox" name="dayList" id="wedCheck" value=3>W</label>
+                        <label><input type="checkbox" name="dayList" id="thuCheck" value=4>Th</label>
+                        <label><input type="checkbox" name="dayList" id="friCheck" value=5>F</label>
+                    </div>
+                    
+                    <label>Start Time:</label>
+                    <input type="text" name="startTime" id="editStart" value="">
+
+                    <label>End Time:</label>
+                    <input type="text" name="endTime" id="editEnd" value="">
+
+                    <label>Location:</label>
+                    <input type="text" name="location" id="editLocation" maxlength="200" value="">
+
+                    <label>Description:</label>
+                    <textarea name="description" id="editDescription" cols="40" rows="10"></textarea>
+
+                    <input type="hidden" name="_method" value="edit">
+                    <button type="submit">Edit</button>
+                </form>
             <button id="cancelEditBtn">Cancel</button>
         </div>
     </div>
@@ -53,7 +90,18 @@
     <div id="delModal" class="modal">
         <div class="modal-content">
             <span class="closeDel">&times;</span>
-            <a>Delete Class</a>
+            <form method="post">
+                <p>Delete Class</p>
+                <div class="scrollBox">
+                {% csrf_token %}
+                {% for event in eventData %}
+                    <input type="checkbox" name="delList" id="delList" value={{event.id}}>
+                    <label>{{event.title}}<br></label>
+                {% endfor %}
+                </div>
+                <input type="hidden" name="_method" value="delete">
+                <button type="submit">Delete</button>
+            </form>
             <button id="cancelDelBtn">Cancel</button>
         </div>
     </div>
@@ -107,7 +155,7 @@
                         {% for day in event.day %}
                         {% if day == '1' %}
                         <li class="cd-schedule__event">
-                            <a data-start={{event.startTime|date:"G:i"}} data-end={{event.endTime|date:"G:i"}} data-content={{event.description}} data-event="event-1" href="#0">
+                            <a data-start={{event.startTime|date:"G:i"}} data-end={{event.endTime|date:"G:i"}} data-content="{% static 'test' %}" data-event="event-1" href="#0">
                                 <em class="cd-schedule__name">{{ event.title }}</em>
                             </a>
                         </li>
@@ -129,11 +177,11 @@
                             </a>
                         </li>  Example of how event should inserted into a day  -->
 
-                        {% for event in eventData %}
+                        {% for event in eventData %} 
                         {% for day in event.day %}
                         {% if day == '2' %}
                         <li class="cd-schedule__event">
-                            <a data-start={{event.startTime|date:"G:i"}} data-end= {{event.endTime|date:"G:i"}} data-content="event-abs-circuit" data-event="event-2" href="#0">
+                            <a data-start={{event.startTime|date:"G:i"}} data-end= {{event.endTime|date:"G:i"}} data-content="{% static 'test' %}" data-event="event-2" href="#0">
                                 <em class="cd-schedule__name">{{ event.title }}</em>
                             </a>
                         </li>
@@ -154,7 +202,7 @@
                         {% for day in event.day %}
                         {% if day == '3' %}
                         <li class="cd-schedule__event">
-                            <a data-start={{event.startTime|date:"G:i"}} data-end={{event.endTime|date:"G:i"}} data-content="event-abs-circuit" data-event="event-3" href="#0">
+                            <a data-start={{event.startTime|date:"G:i"}} data-end={{event.endTime|date:"G:i"}} data-content="{% static 'test' %}" data-event="event-3" href="#0">
                                 <em class="cd-schedule__name">{{ event.title }}</em>
                             </a>
                         </li>
@@ -174,7 +222,7 @@
                         {% for day in event.day %}
                         {% if day == '4' %}
                         <li class="cd-schedule__event">
-                            <a data-start={{event.startTime|date:"G:i"}} data-end={{event.endTime|date:"G:i"}} data-content="event-abs-circuit" data-event="event-4" href="#0">
+                            <a data-start={{event.startTime|date:"G:i"}} data-end={{event.endTime|date:"G:i"}} data-content="{% static 'test' %}" data-event="event-4" href="#0">
                                 <em class="cd-schedule__name">{{ event.title }}</em>
                             </a>
                         </li>
@@ -194,7 +242,7 @@
                         {% for day in event.day %}
                         {% if day == '5' %}
                         <li class="cd-schedule__event">
-                            <a data-start={{event.startTime|date:"G:i"}} data-end={{event.endTime|date:"G:i"}} data-content="event-abs-circuit" data-event="event-1" href="#0">
+                            <a data-start={{event.startTime|date:"G:i"}} data-end={{event.endTime|date:"G:i"}} data-content="{% static 'test' %}" data-event="event-1" href="#0">
                                 <em class="cd-schedule__name">{{ event.title }}</em>
                             </a>
                         </li>

@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, JsonResponse
+from django.core.serializers.json import DjangoJSONEncoder
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth import authenticate, login, logout
-#from django.contrib.auth.models import User
+from django.views.generic.edit import DeleteView
 from .forms import *
 from users.models import User 
 from django.views.generic import View
@@ -10,6 +11,13 @@ from rest_framework.decorators import api_view
 import pandas as pd
 from geopy.geocoders import Nominatim
 from .models import *
+import json
+
+day_dict = {'1': "M",
+            '2': "T",
+            '3': "W",
+            '4': "Th",
+            '5': "F"}
 
 '''
 Loads the home page of the website 
@@ -82,17 +90,13 @@ class Scheduler(View):
         form = AddEventForm()
         if request.user.is_authenticated:
             user_sched = Event.objects.filter(uid=request.user).values() 
-            
-            for x in user_sched:
-                print(x['id'])
-
             context = {
                 'eventData':user_sched,
+                'eventJson':json.dumps(list(user_sched), cls=DjangoJSONEncoder),
                 'form':form,
             }
             return render(request, 'FinderKeeper/schedule.html', context,)
         else:  #If user is not logged in, just direct them to an empty schedule 
-            print("Not logged in")
             return render(request, 'FinderKeeper/schedule.html',{'form':form})
         
     #Handles changes to users schedule
@@ -101,8 +105,8 @@ class Scheduler(View):
             method = self.request.POST.get('_method', '').lower()
             if method == 'add':
                 self.add(request)
-            elif method == 'update':
-                self.update(request) 
+            elif method == 'edit':
+                self.edit(request)
             elif method == 'delete':
                 self.delete(request)
         else:
@@ -121,13 +125,27 @@ class Scheduler(View):
                                  location=form.cleaned_data.get("location"),
                                  description=form.cleaned_data.get("description")) 
 
-    #Update classes/event
-    def update(self, request):
-        pass
+    #Update classes/events
+    def edit(self, request):
+        eventId = request.POST.get('editList')
+        userEvent = Event.objects.filter(uid=request.user)
+        editEvent = userEvent.get(id=eventId)
 
+        editEvent.title = request.POST.get("title")
+        editEvent.day = request.POST.getlist("dayList")
+        editEvent.startTime = request.POST.get("startTime")
+        editEvent.endTime = request.POST.get("endTime")
+        editEvent.location = request.POST.get("location")
+        editEvent.description = request.POST.get("description")
+        editEvent.save()
+        
     #Delete classes/event
     def delete(self, request):
-        pass
+        form = request.POST.getlist('delList')
+        if len(form) != 0:
+            userEvents = Event.objects.filter(uid=request.user)
+            for id in form:
+                userEvents.filter(id=id).delete()
 
 '''
 Produces a map of the campus, allows users to pin/highlight buildings for easier navigation
