@@ -150,12 +150,11 @@
                 <li class="cd-schedule__group">
                     <div class="cd-schedule__top-info"><span>Monday</span></div>
                     <ul>
-                        
                         {% for event in eventData %}
                         {% for day in event.day %}
                         {% if day == '1' %}
                         <li class="cd-schedule__event">
-                            <a data-start={{event.startTime|date:"G:i"}} data-end={{event.endTime|date:"G:i"}} data-content="{% static 'test' %}" data-event="event-1" href="#0">
+                            <a data-start={{event.startTime|date:"G:i"}} data-end={{event.endTime|date:"G:i"}} data-content="{% static 'details' %}" data-event="event-1" href="#0" data-id={{event.id}}>
                                 <em class="cd-schedule__name">{{ event.title }}</em>
                             </a>
                         </li>
@@ -176,12 +175,12 @@
                                 <em class="cd-schedule__name">Rowing Workout</em>
                             </a>
                         </li>  Example of how event should inserted into a day  -->
-
+                        
                         {% for event in eventData %} 
                         {% for day in event.day %}
                         {% if day == '2' %}
                         <li class="cd-schedule__event">
-                            <a data-start={{event.startTime|date:"G:i"}} data-end= {{event.endTime|date:"G:i"}} data-content="{% static 'test' %}" data-event="event-2" href="#0">
+                            <a data-start={{event.startTime|date:"G:i"}} data-end= {{event.endTime|date:"G:i"}} data-content="{% static 'details' %}" data-event="event-2" href="#0" data-id={{event.id}}>
                                 <em class="cd-schedule__name">{{ event.title }}</em>
                             </a>
                         </li>
@@ -202,7 +201,7 @@
                         {% for day in event.day %}
                         {% if day == '3' %}
                         <li class="cd-schedule__event">
-                            <a data-start={{event.startTime|date:"G:i"}} data-end={{event.endTime|date:"G:i"}} data-content="{% static 'test' %}" data-event="event-3" href="#0">
+                            <a data-start={{event.startTime|date:"G:i"}} data-end={{event.endTime|date:"G:i"}} data-content="{% static 'details' %}" data-event="event-3" href="#0" data-id={{event.id}}>
                                 <em class="cd-schedule__name">{{ event.title }}</em>
                             </a>
                         </li>
@@ -222,7 +221,7 @@
                         {% for day in event.day %}
                         {% if day == '4' %}
                         <li class="cd-schedule__event">
-                            <a data-start={{event.startTime|date:"G:i"}} data-end={{event.endTime|date:"G:i"}} data-content="{% static 'test' %}" data-event="event-4" href="#0">
+                            <a data-start={{event.startTime|date:"G:i"}} data-end={{event.endTime|date:"G:i"}} data-content="{% static 'details' %}" data-event="event-4" href="#0" data-id={{event.id}}>
                                 <em class="cd-schedule__name">{{ event.title }}</em>
                             </a>
                         </li>
@@ -242,7 +241,7 @@
                         {% for day in event.day %}
                         {% if day == '5' %}
                         <li class="cd-schedule__event">
-                            <a data-start={{event.startTime|date:"G:i"}} data-end={{event.endTime|date:"G:i"}} data-content="{% static 'test' %}" data-event="event-1" href="#0">
+                            <a data-start={{event.startTime|date:"G:i"}} data-end={{event.endTime|date:"G:i"}} data-content="{% static 'details' %}" data-event="event-1" href="#0" data-id={{event.id}}>
                                 <em class="cd-schedule__name">{{ event.title }}</em>
                             </a>
                         </li>

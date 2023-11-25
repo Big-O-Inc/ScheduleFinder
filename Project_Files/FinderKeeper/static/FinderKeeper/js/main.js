@@ -112,7 +112,7 @@
 		this.modal.setAttribute('data-event', target.getAttribute('data-event')); //Data to populate the extra details
 
 		//update event content
-		this.loadEventContent(target.getAttribute('data-content')); //This loads the extra details
+		this.loadEventContent(target.getAttribute('data-content'), target.getAttribute('data-id')); //This loads the extra details
 
 		Util.addClass(this.modal, 'cd-schedule-modal--open');
 		
@@ -288,7 +288,7 @@
 		}
 	};
 
-	ScheduleTemplate.prototype.loadEventContent = function(content) {
+	ScheduleTemplate.prototype.loadEventContent = function(content, eventId) {
 		// load the content of an event when user selects it
 		var self = this;
 
@@ -296,7 +296,7 @@
 		httpRequest.onreadystatechange = function() {
 			if (httpRequest.readyState === XMLHttpRequest.DONE) {
 	      if (httpRequest.status === 200) {
-	      	self.modal.getElementsByClassName('cd-schedule-modal__event-info')[0].innerHTML = self.getEventContent(httpRequest.responseText); 
+	      	self.modal.getElementsByClassName('cd-schedule-modal__event-info')[0].innerHTML = self.getEventContent(httpRequest.responseText, eventId); 
 	      	Util.addClass(self.modal, 'cd-schedule-modal--content-loaded');
 	      }
 	    }
@@ -305,10 +305,23 @@
     httpRequest.send();
 	};
 
-	ScheduleTemplate.prototype.getEventContent = function(string) {
+	ScheduleTemplate.prototype.getEventContent = function(string, eventId) {
 		// reset the loaded event content so that it can be inserted in the modal
+		const eventJson = JSON.parse(JSON.parse(document.getElementById("eventJson").textContent));
+		for (i = 0; i < eventJson.length; i++) {
+    		if (eventJson[i]["id"] == eventId) {
+      			var currEvent = eventJson[i];
+      			break;
+    		} 
+		}
 		var div = document.createElement('div');
 		div.innerHTML = string.trim();
+
+		div.getElementsByClassName("title")[0].innerHTML = `Title: ${currEvent['title']}` 
+		div.getElementsByClassName("time")[0].innerHTML = `Time: ${currEvent['startTime']} - ${currEvent['endTime']}`
+		div.getElementsByClassName("location")[0].innerHTML = `Location: ${currEvent['location']}`
+		div.getElementsByClassName("description")[0].innerHTML = `Description: ${currEvent['description']}`
+
 		return div.getElementsByClassName('cd-schedule-modal__event-info')[0].innerHTML;
 	};
 
