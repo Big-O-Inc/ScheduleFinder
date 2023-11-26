@@ -66,6 +66,24 @@
         .navbar a:hover {
             background-color: #555;
         }
+        .profile-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-info {
+            margin-right: 10px; 
+            color: white; 
+        }
+
+        .profile-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
     </style>
 </head>
 <body>
@@ -77,6 +95,10 @@
         <a href="./schedule">Schedule</a>
         <a href="./login">Login</a>
         <a href="./signup">Sign Up</a>
+        <div class="profile-container">
+            <span class="profile-info">Username123</span>
+            <img class="profile-icon" src="{% static 'images/profile-icon.png' %}" alt="Profile Icon">
+        </div>
     </div>
     <header>
         <img class="small-rectangle-image" src="{% static 'images/bronco_logo.jpg' %}" alt="Campus Map">
