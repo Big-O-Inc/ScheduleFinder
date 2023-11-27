@@ -316,11 +316,23 @@
 		}
 		var div = document.createElement('div');
 		div.innerHTML = string.trim();
-
+	
 		div.getElementsByClassName("title")[0].innerHTML = `Title: ${currEvent['title']}` 
 		div.getElementsByClassName("time")[0].innerHTML = `Time: ${currEvent['startTime']} - ${currEvent['endTime']}`
-		div.getElementsByClassName("location")[0].innerHTML = `Location: ${currEvent['location']}`
+		//div.getElementsByClassName("location")[0].innerHTML = `Location: ${currEvent['location']}`
 		div.getElementsByClassName("description")[0].innerHTML = `Description: ${currEvent['description']}`
+
+		if (currEvent['mapData'] != null) {
+			locDiv = div.getElementsByClassName("location")[0];
+			var a = document.createElement('a');
+			a.setAttribute('href', String(currEvent['mapData']));
+			a.target = "_blank"
+			a.innerHTML = `Location: ${currEvent['location']}`
+			locDiv.appendChild(a)
+		}
+		else {
+			div.getElementsByClassName("location")[0].innerHTML = `Location: ${currEvent['location']}`
+		}
 
 		return div.getElementsByClassName('cd-schedule-modal__event-info')[0].innerHTML;
 	};

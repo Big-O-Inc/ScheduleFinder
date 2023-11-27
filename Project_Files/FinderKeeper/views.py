@@ -3,15 +3,13 @@ from django.http import HttpResponse, JsonResponse
 from django.core.serializers.json import DjangoJSONEncoder
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth import authenticate, login, logout
-from django.views.generic.edit import DeleteView
 from .forms import *
 from users.models import User 
 from django.views.generic import View
 from rest_framework.decorators import api_view
-import pandas as pd
-from geopy.geocoders import Nominatim
 from .models import *
 import json
+import re
 
 day_dict = {'1': "M",
             '2': "T",
@@ -24,9 +22,6 @@ Loads the home page of the website
 '''
 class Homepage(View):
     def get(self, request):
-        if request.user.is_authenticated:
-            print(request.user.id)
-            
         return render(request, 'FinderKeeper/index.html')
 
 '''
@@ -74,12 +69,15 @@ class Signup(View):
         password = request.POST.get('password')
         
         # Create a new user
-        user = User.objects.create_user(username=username, email=email)
-        user.set_password(password)
-        user.save()
+        try:
+            user = User.objects.create_user(username=username, email=email)
+            user.set_password(password)
+            user.save()
+        except:
+            return HttpResponse("Account already exists")
         
         # Redirect to the login page after successful sign-up
-        return redirect('FinderKeeper/login')
+        return redirect('login')
 '''
 Creates and populates a schedule with events of the user (searched by uuid). 
 Can add, update, and delete events associated with uid.
@@ -123,6 +121,7 @@ class Scheduler(View):
                                  startTime=form.cleaned_data.get("startTime"),
                                  endTime=form.cleaned_data.get("endTime"),
                                  location=form.cleaned_data.get("location"),
+                                 mapData=self.findBldg(form.cleaned_data.get("location")), #If location is valid will return a link, otherwise None
                                  description=form.cleaned_data.get("description")) 
 
     #Update classes/events
@@ -137,6 +136,7 @@ class Scheduler(View):
         editEvent.endTime = request.POST.get("endTime")
         editEvent.location = request.POST.get("location")
         editEvent.description = request.POST.get("description")
+        editEvent.mapData = self.findBldg(editEvent.location)
         editEvent.save()
         
     #Delete classes/event
@@ -147,6 +147,18 @@ class Scheduler(View):
             for id in form:
                 userEvents.filter(id=id).delete()
 
+    def findBldg(self, str):
+        parsed = re.split("\W+", str)
+        for x in parsed:
+            if len(x) > 0 and bool(re.search(r'\d',x)): #Searches for first valid instance of a string matching a valid building number format
+                if Building.objects.filter(bldg=x.upper()).exists(): #Assumes building number is given first. If this is not valid then assume rest of string does not contain building number
+                    bldg = Building.objects.filter(bldg=x.upper())
+                    mapData = bldg.values_list('link', flat=True)
+                    return mapData[0]
+                else:
+                    return None
+        return None
+                
 '''
 Produces a map of the campus, allows users to pin/highlight buildings for easier navigation
 Interacts with the Scheduler class to autmoatically pin the buildings of the user's classes 

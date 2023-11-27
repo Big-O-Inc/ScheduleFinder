@@ -53,7 +53,6 @@
         <a href = "https://github.com/Big-O-Inc/ScheduleFinder" target="_blank">GitHub</a>
         <a href ="./settings">Settings</a>
         <a href = "https://www.cpp.edu/maps/" target = "_blank">Map</a>
-        <a href="./schedule">Schedule</a>
         <a href="./login">Login</a>
         <a href="./signup">Sign Up</a>
         {% if user.is_authenticated %}
@@ -113,13 +112,13 @@
                     </div>
                     
                     <label>Start Time:</label>
-                    <input type="text" name="startTime" id="editStart" value="">
+                    <input type="text" name="startTime" id="editStart" placeholder="Enter in military time" value="">
 
                     <label>End Time:</label>
-                    <input type="text" name="endTime" id="editEnd" value="">
+                    <input type="text" name="endTime" id="editEnd" placeholder="Enter in military time" value="">
 
                     <label>Location:</label>
-                    <input type="text" name="location" id="editLocation" maxlength="200" value="">
+                    <input type="text" name="location" id="editLocation" maxlength="200" placeholder="ex. 1-101" value="">
 
                     <label>Description:</label>
                     <textarea name="description" id="editDescription" cols="40" rows="10"></textarea>

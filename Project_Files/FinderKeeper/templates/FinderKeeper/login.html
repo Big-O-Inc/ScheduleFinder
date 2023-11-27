@@ -114,14 +114,14 @@
     <div class="navbar">
         <a href="/">Home Page</a>
         <a href = "https://github.com/Big-O-Inc/ScheduleFinder" target="_blank">GitHub</a>
-        <a href="#settings">Settings</a>
+        <a href="./settings">Settings</a>
         <a href = "https://www.cpp.edu/maps/" target = "_blank">Map</a>
         <a href="./schedule">Schedule</a>
-        <a href="./login">Login</a>
         <a href="./signup">Sign Up</a>
         {% if user.is_authenticated %}
             <div class="profile-container">
                 <span class="profile-info">{{ user.username }}</span>
+                {% load static %}
                 <img class="profile-icon" src="{% static 'images/profile-icon.png' %}" alt="Profile Icon">
             </div>
         {% endif %}

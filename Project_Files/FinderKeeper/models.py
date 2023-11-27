@@ -14,7 +14,12 @@ class Event(models.Model):
     uid = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     day = MultiSelectField(choices=day_choices, max_length=5)
-    startTime = models.TimeField(null=True)
-    endTime = models.TimeField(null=True)
+    startTime = models.TimeField()
+    endTime = models.TimeField()
     location = models.CharField(max_length=200)
-    description = models.TextField()
+    mapData = models.URLField(null=True)
+    description = models.TextField(null=True)
+
+class Building(models.Model):
+    bldg = models.CharField(max_length=50) #The building number such as 8 or 24C
+    link = models.URLField()
