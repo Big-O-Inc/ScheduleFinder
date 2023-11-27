@@ -9,15 +9,59 @@
     <script>document.getElementsByTagName("html")[0].className += " js";</script>
     <link rel="stylesheet" href="{% static 'FinderKeeper/css/schedStyle.css' %}">
     <title>Finder Keeper</title>
+    <style>
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
+        }
+        .navbar a {
+            float: left;
+            display: block;
+            color: #fff;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        .navbar a:hover {
+            background-color: #555;
+        }
+        .profile-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-info {
+            margin-right: 10px; 
+            color: white; 
+        }
+
+        .profile-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
+    </style>
 </head>
 
 <body>
+    {% load static %}
     <div class="navbar">
         <a href="/">Home Page</a>
         <a href = "https://github.com/Big-O-Inc/ScheduleFinder" target="_blank">GitHub</a>
-        <a href="settings">Settings</a>
+        <a href ="./settings">Settings</a>
+        <a href = "https://www.cpp.edu/maps/" target = "_blank">Map</a>
+        <a href="./schedule">Schedule</a>
         <a href="./login">Login</a>
         <a href="./signup">Sign Up</a>
+        {% if user.is_authenticated %}
+            <div class="profile-container">
+                <span class="profile-info">{{ user.username }}</span>
+                <img class="profile-icon" src="{% static 'images/profile-icon.png' %}" alt="Profile Icon">
+            </div>
+        {% endif %}
     </div>
 
     <header class="cd-main-header text-center flex flex-column flex-center">
