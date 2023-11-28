@@ -23,5 +23,5 @@ python manage.py runserver 0.0.0.0:8000
 ```
 Website is hosted on:
 ```
-http://3.133.127.224:8000
+http://13.58.197.182:8000/
 ```
