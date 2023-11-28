@@ -54,7 +54,8 @@ class Logout(View):
     def post(self, request):
         if request.user.is_authenticated:
             logout(request)
-            return redirect('homepage')
+        return redirect('homepage')
+        
 
 '''
 Creating account info for user (username and password), secure their info, and associate their account to a uuid
@@ -78,7 +79,6 @@ class Signup(View):
         
         # Redirect to the login page after successful sign-up
         return redirect('login')
-    
 '''
 Creates and populates a schedule with events of the user (searched by uuid). 
 Can add, update, and delete events associated with uid.
@@ -129,17 +129,16 @@ class Scheduler(View):
     def edit(self, request):
         eventId = request.POST.get('editList')
         userEvent = Event.objects.filter(uid=request.user)
+        editEvent = userEvent.get(id=eventId)
 
-        if userEvent.filter(id=eventId).exists():
-            editEvent = userEvent.get(id=eventId)
-            editEvent.title = request.POST.get("title")
-            editEvent.day = request.POST.getlist("dayList")
-            editEvent.startTime = request.POST.get("startTime")
-            editEvent.endTime = request.POST.get("endTime")
-            editEvent.location = request.POST.get("location")
-            editEvent.description = request.POST.get("description")
-            editEvent.mapData = self.findBldg(editEvent.location)
-            editEvent.save()
+        editEvent.title = request.POST.get("title")
+        editEvent.day = request.POST.getlist("dayList")
+        editEvent.startTime = request.POST.get("startTime")
+        editEvent.endTime = request.POST.get("endTime")
+        editEvent.location = request.POST.get("location")
+        editEvent.description = request.POST.get("description")
+        editEvent.mapData = self.findBldg(editEvent.location)
+        editEvent.save()
         
     #Delete classes/event
     def delete(self, request):
