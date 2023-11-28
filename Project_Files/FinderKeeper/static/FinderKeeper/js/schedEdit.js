@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   spanDel.onclick = function () {
     delModal.style.display = "none";
-    document.body.classList.remove('overflowHIdden');
+    document.body.classList.remove('overflowHidden');
   }
 
   window.onclick = function (event) {
