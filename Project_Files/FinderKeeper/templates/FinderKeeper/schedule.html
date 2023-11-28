@@ -80,7 +80,7 @@
             <form method="post">
                 <p>Add Class</p>
                 {% csrf_token %}
-                {{ form }}
+                {{ form.as_p }}
                 <input type="hidden" name="_method" value="add">
                 <button type="submit">Add</button>
                 <button id="cancelAddBtn">Cancel</button>
@@ -95,13 +95,14 @@
                 <form method="post">
                     {% csrf_token %}
                     <select name="editList" id="editList" onchange="return loadForm()">
+                        <option disabled selected value> -- select an event -- </option>
                         {% for event in eventData %}
                         <option value="{{event.id}}">{{event.title}}</option>
                         {% endfor %}
-                    </select>
+                    </select><br>
 
                     <label>Title:</label>
-                    <input type="text" id="editTitle" name ="title" maxlength="200"  value="">
+                    <input type="text" id="editTitle" name ="title" maxlength="200"  placeholder="Course number" value=""><br>
 
                     <label>Days:</label>
                     <div>
@@ -113,21 +114,21 @@
                     </div>
                     
                     <label>Start Time:</label>
-                    <input type="text" name="startTime" id="editStart" placeholder="Enter in military time" value="">
+                    <input type="text" name="startTime" id="editStart" placeholder="Enter in military time" value=""><br>
 
                     <label>End Time:</label>
-                    <input type="text" name="endTime" id="editEnd" placeholder="Enter in military time" value="">
+                    <input type="text" name="endTime" id="editEnd" placeholder="Enter in military time" value=""><br>
 
                     <label>Location:</label>
-                    <input type="text" name="location" id="editLocation" maxlength="200" placeholder="ex. 1-101" value="">
+                    <input type="text" name="location" id="editLocation" maxlength="200" placeholder="ex. 1-101" value=""><br>
 
                     <label>Description:</label>
-                    <textarea name="description" id="editDescription" cols="40" rows="10"></textarea>
+                    <textarea name="description" id="editDescription" cols="40" rows="10"></textarea><br>
 
                     <input type="hidden" name="_method" value="edit">
                     <button type="submit">Edit</button>
                 </form>
-            <button id="cancelEditBtn">Cancel</button>
+                <button id="cancelEditBtn">Cancel</button>
         </div>
     </div>
 
