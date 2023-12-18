@@ -1,7 +1,7 @@
 # Big O Inc ScheduleFinder service
 ## Group: Benjamin Liu, Joshua Bicera, Loc Nguyen
 
-Purpose - Calendar scheduling for CPP students
+Purpose - Calendar scheduling for Cal Poly Pomona students
 
 Website is hosted on:
 ```
