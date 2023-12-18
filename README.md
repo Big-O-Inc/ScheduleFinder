@@ -1,6 +1,12 @@
 # Big O Inc ScheduleFinder service
 ## Group: Benjamin Liu, Joshua Bicera, Loc Nguyen
 
+Purpose - Calendar scheduling for CPP students
+
+Website is hosted on:
+```
+http://13.58.197.182:8000/
+```
 Installing DJANGO through command line (need python):
 ```
 python -m pip install Django
@@ -21,7 +27,4 @@ Run this command to run the webpage:
 ```
 python manage.py runserver 0.0.0.0:8000
 ```
-Website is hosted on:
-```
-http://13.58.197.182:8000/
-```
+
